@@ -2,7 +2,7 @@
 Author: Jalen-Zhong jelly_zhong.qz@foxmail.com
 Date: 2023-04-11 16:45:23
 LastEditors: Jalen-Zhong jelly_zhong.qz@foxmail.com
-LastEditTime: 2023-04-14 14:30:17
+LastEditTime: 2023-04-15 18:34:12
 FilePath: \local ability of CNN\train.py
 Description: 
 Reference or Citation: 
@@ -111,5 +111,5 @@ def CatVsDog(NN,NN_name,GPU):
 
 if "__main__" == __name__:
 
-  LocVsGlob(NN=DCNN(in_channel=1), NN_name='DCNN', Data_name = 'fix', GPU = 0)
-  # CatVsDog(NN=DCNN(in_channel=3), NN_name='DCNN', GPU = 5)
+  # LocVsGlob(NN=TwoKernel(in_channel=1), NN_name='TwoKernel', Data_name = 'none', GPU = 0)
+  CatVsDog(NN=TwoKernel(in_channel=3), NN_name='TwoKernel', GPU = 0)

@@ -2,7 +2,7 @@
 Author: Jalen-Zhong jelly_zhong.qz@foxmail.com
 Date: 2023-04-11 15:02:59
 LastEditors: Jalen-Zhong jelly_zhong.qz@foxmail.com
-LastEditTime: 2023-04-14 11:05:18
+LastEditTime: 2023-04-14 20:13:35
 FilePath: \local ability of CNN\dataset.py
 Description: 
 Reference or Citation: 
@@ -76,29 +76,6 @@ class DataFromFileFolder(data.Dataset):
     def __len__(self):
         return self.filelength
     
-# class DataFromFileFolder(data.Dataset):
-#     def __init__(self, file_list, transform=None, use_gpu=torch.cuda.is_available(), test=False):
-#         self.file_list = file_list
-#         self.transform = transform
-#         self.filelength = len(file_list)
-#         self.use_gpu = use_gpu
-#         self.test = test
-
-#     def __len__(self):
-#         return self.filelength
-
-#     def __getitem__(self, idx):
-#         img_path = self.file_list[idx]
-#         img = Image.open(img_path)
-#         img_transformed = self.transform(img)
-#         label = img_path.split("/")[-1].split(".")[0]
-#         if not self.test:
-#             label = [1] if label == "dog" else [0]
-#         else:
-#             label = int(label)
-#         label = torch.tensor(label).float()
-#         return img_transformed, label
-
 
 def generator(examples, image_size, rectangle_size, left_up_coors, right_down_coors, middle_coors, fix_coors):
 
@@ -127,8 +104,8 @@ def generator(examples, image_size, rectangle_size, left_up_coors, right_down_co
             left_up_pixels = get_square_label(left_up_coors, left_up_pixels, rectangle_size)
         if right_down_seed == 1:
             right_down_pixels = get_square_label(right_down_coors, right_down_pixels, rectangle_size)
-        if middle_seed == 1:
-            middle_pixels = get_square_label(middle_coors, middle_pixels, rectangle_size)
+        # if middle_seed == 1:
+        #     middle_pixels = get_square_label(middle_coors, middle_pixels, rectangle_size)
         image = left_up_pixels + right_down_pixels + middle_pixels + fix_pixels
         image = image.reshape(1, image_size, image_size) / image.max()
 
@@ -153,9 +130,9 @@ if __name__ == "__main__":
     middle_coors = [image_size / 2, image_size / 2]
 
     images, labels = generator(train_examples, image_size, rectangle_size, left_up_coors, right_down_coors, middle_coors, fix_coors)
-    save_h5('dataset/train_random_dataset_%dx%d.h5' % (patch_number, patch_number), images = images, labels = labels)
+    save_h5('dataset/train_none_dataset_%dx%d.h5' % (patch_number, patch_number), images = images, labels = labels)
     images, labels = generator(test_examples, image_size, rectangle_size, left_up_coors, right_down_coors, middle_coors, fix_coors)
-    save_h5('dataset/test_random_dataset_%dx%d.h5' % (patch_number, patch_number), images = images, labels = labels)
+    save_h5('dataset/test_none_dataset_%dx%d.h5' % (patch_number, patch_number), images = images, labels = labels)
 
     # np.savez('dataset/dataset_%dx%d.npz' % (patch_number, patch_number), images = images, labels = labels)
 

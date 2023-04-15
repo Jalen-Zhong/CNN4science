@@ -7,7 +7,8 @@
 | Dataset            | OneKernel | TwoKernels | DCNN |
 | ------------------ | --------- | ---------- | ---- |
 | Random Middle Area | √        | ×         | ×   |
-| Fix Mmiddle Area   | √        |            | √   |
+| Fix Middle Area    | √        | √         | √   |
+| None Middle Area   | √        | √         | √   |
 | Cats and Dogs      |           |            | √   |
 
 ### LOSS
@@ -26,7 +27,7 @@
 
 ### DCNN
 
-![1681354591165](image/README/1681354591165.png)(3350,000,000,000 FLOPs)
+![1681473348019](image/README/1681473348019.png)(3350,000,000,000 FLOPs)
 
 ## DataSet
 
