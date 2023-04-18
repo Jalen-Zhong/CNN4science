@@ -2,7 +2,7 @@
 Author: Jalen-Zhong jelly_zhong.qz@foxmail.com
 Date: 2023-04-11 16:45:23
 LastEditors: Jalen-Zhong jelly_zhong.qz@foxmail.com
-LastEditTime: 2023-04-14 11:06:15
+LastEditTime: 2023-04-15 19:39:44
 FilePath: \local ability of CNN\lit_models.py
 Description: 
 Reference or Citation: 

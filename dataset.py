@@ -2,7 +2,7 @@
 Author: Jalen-Zhong jelly_zhong.qz@foxmail.com
 Date: 2023-04-11 15:02:59
 LastEditors: Jalen-Zhong jelly_zhong.qz@foxmail.com
-LastEditTime: 2023-04-14 20:13:35
+LastEditTime: 2023-04-18 18:13:27
 FilePath: \local ability of CNN\dataset.py
 Description: 
 Reference or Citation: 
@@ -45,7 +45,7 @@ class DataFromH5File(data.Dataset):
         h5File = h5py.File(filepath, 'r')
         self.x = h5File['images']
         self.y = h5File['labels']
-        
+
     def __getitem__(self, idx):
         data = torch.from_numpy(self.x[idx]).float()
         label = torch.tensor(self.y[idx])
@@ -77,7 +77,7 @@ class DataFromFileFolder(data.Dataset):
         return self.filelength
     
 
-def generator(examples, image_size, rectangle_size, left_up_coors, right_down_coors, middle_coors, fix_coors):
+def generator(examples, image_size, rectangle_size, left_up_coors, right_down_coors, middle_coors, fix_coors, extra_lu_coors, extra_rd_coors):
 
     list_images = []
     list_labels = []
@@ -87,6 +87,8 @@ def generator(examples, image_size, rectangle_size, left_up_coors, right_down_co
         right_down_pixels = np.zeros((image_size, image_size), np.uint8)
         middle_pixels = np.zeros((image_size, image_size), np.uint8)
         fix_pixels = np.zeros((image_size, image_size), np.uint8)
+        extra_lu_pixels = np.zeros((image_size, image_size), np.uint8)
+        extra_rd_pixels = np.zeros((image_size, image_size), np.uint8)
     
         left_up_seed = randint(0,1)
         right_down_seed = randint(0,1)
@@ -104,9 +106,11 @@ def generator(examples, image_size, rectangle_size, left_up_coors, right_down_co
             left_up_pixels = get_square_label(left_up_coors, left_up_pixels, rectangle_size)
         if right_down_seed == 1:
             right_down_pixels = get_square_label(right_down_coors, right_down_pixels, rectangle_size)
-        # if middle_seed == 1:
-        #     middle_pixels = get_square_label(middle_coors, middle_pixels, rectangle_size)
-        image = left_up_pixels + right_down_pixels + middle_pixels + fix_pixels
+        if middle_seed == 1:
+            # middle_pixels = get_square_label(middle_coors, middle_pixels, rectangle_size)
+            extra_lu_pixels = get_square_label(extra_lu_coors, extra_lu_pixels, rectangle_size)
+            extra_rd_pixels = get_square_label(extra_rd_coors, extra_rd_pixels, rectangle_size)
+        image = left_up_pixels + right_down_pixels + fix_pixels + extra_lu_pixels + extra_rd_pixels
         image = image.reshape(1, image_size, image_size) / image.max()
 
         list_images.append(image)
@@ -119,7 +123,7 @@ if __name__ == "__main__":
     random.seed(2023)
     train_examples = 10000
     test_examples = 2000
-    image_size = 179
+    image_size = 180
     patch_number = 5
     patch_size = image_size / patch_number
     rectangle_size = patch_size / 4
@@ -128,11 +132,13 @@ if __name__ == "__main__":
     left_up_coors = [patch_size / 2, patch_size / 2]
     right_down_coors = [image_size - patch_size/2, image_size - patch_size/2]
     middle_coors = [image_size / 2, image_size / 2]
+    extra_lu = [image_size/ patch_number, image_size/ patch_number]
+    extra_rd = [image_size - image_size/ patch_number, image_size - image_size/ patch_number]
 
-    images, labels = generator(train_examples, image_size, rectangle_size, left_up_coors, right_down_coors, middle_coors, fix_coors)
-    save_h5('dataset/train_none_dataset_%dx%d.h5' % (patch_number, patch_number), images = images, labels = labels)
-    images, labels = generator(test_examples, image_size, rectangle_size, left_up_coors, right_down_coors, middle_coors, fix_coors)
-    save_h5('dataset/test_none_dataset_%dx%d.h5' % (patch_number, patch_number), images = images, labels = labels)
+    images, labels = generator(train_examples, image_size, rectangle_size, left_up_coors, right_down_coors, middle_coors, fix_coors, extra_lu, extra_rd)
+    save_h5('dataset/180_train_fix_dataset_%dx%d.h5' % (patch_number, patch_number), images = images, labels = labels)
+    images, labels = generator(test_examples, image_size, rectangle_size, left_up_coors, right_down_coors, middle_coors, fix_coors, extra_lu, extra_rd)
+    save_h5('dataset/180_test_fix_dataset_%dx%d.h5' % (patch_number, patch_number), images = images, labels = labels)
 
     # np.savez('dataset/dataset_%dx%d.npz' % (patch_number, patch_number), images = images, labels = labels)
 
