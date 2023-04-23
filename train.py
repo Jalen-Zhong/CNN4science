@@ -2,7 +2,7 @@
 Author: Jalen-Zhong jelly_zhong.qz@foxmail.com
 Date: 2023-04-11 16:45:23
 LastEditors: Jalen-Zhong jelly_zhong.qz@foxmail.com
-LastEditTime: 2023-04-18 18:15:25
+LastEditTime: 2023-04-22 20:06:42
 FilePath: \local ability of CNN\train.py
 Description: 
 Reference or Citation: 
@@ -18,7 +18,7 @@ import pytorch_lightning as pl
 from lit_models import MyModel, MetricTracker
 from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor
 from pytorch_lightning.loggers import TensorBoardLogger
-from model import OneKernel, TwoKernel, DCNN, VisionTransformer
+from model import OneKernel, TwoKernel, DCNN, Hybird
 from torchvision import transforms
 from os import listdir
 from torchvision.datasets import ImageFolder
@@ -29,8 +29,7 @@ from vit_pytorch import ViT
 
 def LocVsGlob(NN,NN_name,Data_name,GPU):
     
-    # NetWork = 'Twokernel'
-    dataset = DataFromH5File('dataset/180_train_%s_dataset_5x5.h5' % Data_name)
+    dataset = DataFromH5File('dataset/train_%s_dataset_5x5.h5' % Data_name)
     # dataset = DataFromH5File('dataset/ViT_train_%s_dataset_5x5.h5' % Data_name)
 
     # split the train set into two
@@ -60,7 +59,7 @@ def LocVsGlob(NN,NN_name,Data_name,GPU):
 def CatVsDog(NN,NN_name,GPU):
 
     transform = transforms.Compose([
-        transforms.Resize((180, 180)),
+        transforms.Resize((179, 179)),
         transforms.RandomHorizontalFlip(p=0.5),
         transforms.RandomRotation(25),
         transforms.RandomVerticalFlip(p=0.1),
@@ -106,7 +105,7 @@ def CatVsDog(NN,NN_name,GPU):
 
 if "__main__" == __name__:
 
-  # LocVsGlob(NN=TwoKernel(in_channel=1), NN_name='TwoKernel', Data_name = 'none', GPU = 0)
-  LocVsGlob(NN=ViT(image_size=180, patch_size=18, num_classes=2, dim=128, depth=12, heads=12, mlp_dim=2048, channels=1), NN_name='VisionTransformer_18', Data_name = 'none', GPU = 2)
-  # CatVsDog(NN=TwoKernel(in_channel=3), NN_name='TwoKernel', GPU = 0)
+  # LocVsGlob(NN=DCNN(in_channel=1), NN_name='DCNN_128', Data_name = 'random', GPU = 4)
+  # LocVsGlob(NN=ViT(image_size=180, patch_size=18, num_classes=2, dim=128, depth=12, heads=12, mlp_dim=2048, channels=1), NN_name='VisionTransformer_18', Data_name = 'none', GPU = 2)
+  CatVsDog(NN=DCNN(in_channel=3), NN_name='DCNN', GPU = 4)
   # CatVsDog(NN=ViT(image_size=180, patch_size=18, num_classes=2, dim=128, depth=12, heads=12, mlp_dim=2048, channels=3), NN_name='VisionTransformer_18', GPU = 1)
